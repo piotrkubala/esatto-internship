@@ -126,11 +126,18 @@ class CustomerDatabase {
         return customer_ids;
     }
 
+    /**
+    * Clear all entries in the database
+    */
     public void Clear() {
         customers_dictionary.Clear();
         next_customer_id = 0;
     }
 
+    /**
+    * Save database to file
+    * @param path The path to the file to save the database to
+    */
     public void SaveToFile(String path) {
         // Save database to file
         StreamWriter ?file = null;

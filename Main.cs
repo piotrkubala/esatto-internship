@@ -131,6 +131,158 @@ class MainClass {
         }
     }
 
+    private static void ChangeQueryId(SearchCustomersQuery query) {
+        Console.WriteLine("Id search change");
+        Console.WriteLine("[i] Exact id");
+        Console.WriteLine("[m] Min id");
+        Console.WriteLine("[x] Max id");
+
+        char id_search_key = Console.ReadKey().KeyChar;
+
+        Console.WriteLine("Enter id: ");
+        String ?input_id = Console.ReadLine();
+
+        if (input_id == null) {
+            throw new InputException("Id cannot be empty");
+        }
+
+        try {
+            long id = long.Parse(input_id);
+
+            switch (id_search_key) {
+            case 'i':
+                query.min_id = query.max_id = id;
+                break;
+            case 'm':
+                query.min_id = id;
+                break;
+            case 'x':
+                query.max_id = id;
+                break;
+            default:
+                Console.WriteLine("Invalid input");
+                break;
+            }
+        } catch (FormatException) {
+            throw new InputException("Id must be a number");
+        }
+    }
+
+    private static void ChangeQueryName(SearchCustomersQuery query) {
+        Console.WriteLine("Enter name: ");
+        query.name = Console.ReadLine();
+    }
+
+    private static void ChangeQueryVatId(SearchCustomersQuery query) {
+        Console.WriteLine("Enter VAT ID: ");
+        query.vat_id = Console.ReadLine();
+    }
+
+    private static void ChangeQueryCreationDate(SearchCustomersQuery query) {
+        Console.WriteLine("Creation date search change");
+        Console.WriteLine("[i] Exact date");
+        Console.WriteLine("[m] Min date");
+        Console.WriteLine("[x] Max date");
+
+        char date_search_key = Console.ReadKey().KeyChar;
+
+        Console.WriteLine("Enter date: ");
+        String ?input_date = Console.ReadLine();
+
+        if (input_date == null) {
+            throw new InputException("Date cannot be empty");
+        }
+
+        try {
+            DateTime date = DateTime.Parse(input_date);
+
+            switch (date_search_key) {
+            case 'i':
+                query.min_creation_date = query.max_creation_date = date;
+                break;
+            case 'm':
+                query.min_creation_date = date;
+                break;
+            case 'x':
+                query.max_creation_date = date;
+                break;
+            default:
+                Console.WriteLine("Invalid input");
+                break;
+            }
+        } catch (FormatException) {
+            throw new InputException("Date must be in format yyyy-mm-dd");
+        }
+    }
+
+    private static void ChangeQueryAddress(SearchCustomersQuery query) {
+        Console.WriteLine("Address search change");
+        Console.WriteLine("[c] City");
+        Console.WriteLine("[s] Street");
+        Console.WriteLine("[o] Country");
+        Console.WriteLine("[h] House number");
+
+        char address_search_key = Console.ReadKey().KeyChar;
+
+        if (address_search_key != 'h') {
+            Console.WriteLine("Enter address: ");
+            String ?input_address = Console.ReadLine();
+
+            if (input_address == null) {
+                throw new InputException("Address cannot be empty");
+            }
+
+            switch (address_search_key) {
+                case 'c':
+                query.city = input_address;
+                break;
+            case 's':
+                query.street = input_address;
+                break;
+            case 'o':
+                query.country = input_address;
+                break;
+            default:
+                Console.WriteLine("Invalid input");
+                break;
+            }
+        } else {
+            Console.WriteLine("House number search change");
+            Console.WriteLine("[i] Exact house number");
+            Console.WriteLine("[m] Min house number");
+            Console.WriteLine("[x] Max house number");
+
+            char house_number_search_key = Console.ReadKey().KeyChar;
+
+            String ?input_house_number = Console.ReadLine();
+
+            if (input_house_number == null) {
+                throw new InputException("House number cannot be empty");
+            }
+
+            try {
+                int house_number = int.Parse(input_house_number);
+
+                switch (house_number_search_key) {
+                case 'i':
+                    query.min_house_number = query.max_house_number = house_number;
+                    break;
+                case 'm':
+                    query.min_house_number = house_number;
+                    break;
+                case 'x':
+                    query.max_house_number = house_number;
+                    break;
+                default:
+                    Console.WriteLine("Invalid input");
+                    break;
+                }
+            } catch (FormatException) {
+                throw new InputException("House number must be a number");
+            }
+        } 
+    }
+
     private static void SearchCustomersPrompt(CustomerDatabase database) {
         SearchCustomersQuery query = new SearchCustomersQuery();
 
@@ -149,153 +301,19 @@ class MainClass {
 
             switch (input_key) {
             case 'i':
-                Console.WriteLine("Id search change");
-                Console.WriteLine("[i] Exact id");
-                Console.WriteLine("[m] Min id");
-                Console.WriteLine("[x] Max id");
-
-                char id_search_key = Console.ReadKey().KeyChar;
-
-                Console.WriteLine("Enter id: ");
-                String ?input_id = Console.ReadLine();
-
-                if (input_id == null) {
-                    throw new InputException("Id cannot be empty");
-                }
-
-                try {
-                    long id = long.Parse(input_id);
-
-                    switch (id_search_key) {
-                    case 'i':
-                        query.min_id = query.max_id = id;
-                        break;
-                    case 'm':
-                        query.min_id = id;
-                        break;
-                    case 'x':
-                        query.max_id = id;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input");
-                        break;
-                    }
-                } catch (FormatException) {
-                    throw new InputException("Id must be a number");
-                }
-
+                ChangeQueryId(query);
                 break;
             case 'n':
-                Console.WriteLine("Enter name: ");
-                query.name = Console.ReadLine();
+                ChangeQueryName(query);
                 break;
             case 'v':
-                Console.WriteLine("Enter VAT ID: ");
-                query.vat_id = Console.ReadLine();
+                ChangeQueryVatId(query);
                 break;
             case 'd':
-                Console.WriteLine("Creation date search change");
-                Console.WriteLine("[i] Exact date");
-                Console.WriteLine("[m] Min date");
-                Console.WriteLine("[x] Max date");
-
-                char date_search_key = Console.ReadKey().KeyChar;
-
-                Console.WriteLine("Enter date: ");
-                String ?input_date = Console.ReadLine();
-
-                if (input_date == null) {
-                    throw new InputException("Date cannot be empty");
-                }
-
-                try {
-                    DateTime date = DateTime.Parse(input_date);
-
-                    switch (date_search_key) {
-                    case 'i':
-                        query.min_creation_date = query.max_creation_date = date;
-                        break;
-                    case 'm':
-                        query.min_creation_date = date;
-                        break;
-                    case 'x':
-                        query.max_creation_date = date;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input");
-                        break;
-                    }
-                } catch (FormatException) {
-                    throw new InputException("Date must be in format yyyy-mm-dd");
-                }
-
+                ChangeQueryCreationDate(query);
                 break;
             case 'a':
-                Console.WriteLine("Address search change");
-                Console.WriteLine("[c] City");
-                Console.WriteLine("[s] Street");
-                Console.WriteLine("[o] Country");
-                Console.WriteLine("[h] House number");
-
-                char address_search_key = Console.ReadKey().KeyChar;
-
-                String ?input_address = Console.ReadLine();
-
-                if (input_address == null) {
-                    throw new InputException("Address cannot be empty");
-                }
-
-                if (address_search_key != 'h') {
-                    switch (address_search_key) {
-                        case 'c':
-                        query.city = input_address;
-                        break;
-                    case 's':
-                        query.street = input_address;
-                        break;
-                    case 'o':
-                        query.country = input_address;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid input");
-                        break;
-                    }
-                } else {
-                    Console.WriteLine("House number search change");
-                    Console.WriteLine("[i] Exact house number");
-                    Console.WriteLine("[m] Min house number");
-                    Console.WriteLine("[x] Max house number");
-
-                    char house_number_search_key = Console.ReadKey().KeyChar;
-
-                    String ?input_house_number = Console.ReadLine();
-
-                    if (input_house_number == null) {
-                        throw new InputException("House number cannot be empty");
-                    }
-
-                    try {
-                        int house_number = int.Parse(input_house_number);
-
-                        switch (house_number_search_key) {
-                        case 'i':
-                            query.min_house_number = query.max_house_number = house_number;
-                            break;
-                        case 'm':
-                            query.min_house_number = house_number;
-                            break;
-                        case 'x':
-                            query.max_house_number = house_number;
-                            break;
-                        default:
-                            Console.WriteLine("Invalid input");
-                            break;
-                        }
-                    } catch (FormatException) {
-                        throw new InputException("House number must be a number");
-                    }
-                } 
-                
+                ChangeQueryAddress(query);                
                 break;
             case 'q':
                 break;

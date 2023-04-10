@@ -6,6 +6,15 @@ class Customer: ICloneable {
     public DateTime ?creation_date {get; set;}
     public CustomerAddress address;
 
+    public CustomerAddress GetSetAddress {
+        get {
+            return address;
+        }
+        set {
+            address = value;
+        }
+    }
+
     public Customer(String ?name, String ?vat_id, DateTime ?creation_date, CustomerAddress address) {
         this.name = name;
         this.vat_id = vat_id;
