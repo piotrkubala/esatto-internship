@@ -1,9 +1,9 @@
 class Customer: ICloneable {
-    public long ?id;
+    public long ?id {get; set;}
 
-    public String ?name;
-    public String ?vat_id;
-    public DateTime ?creation_date;
+    public String ?name {get; set;}
+    public String ?vat_id {get; set;}
+    public DateTime ?creation_date {get; set;}
     public CustomerAddress address;
 
     public Customer(String ?name, String ?vat_id, DateTime ?creation_date, CustomerAddress address) {
@@ -11,6 +11,13 @@ class Customer: ICloneable {
         this.vat_id = vat_id;
         this.creation_date = creation_date;
         this.address = address;
+    }
+
+    public Customer() {
+        this.name = null;
+        this.vat_id = null;
+        this.creation_date = null;
+        this.address = new CustomerAddress();
     }
 
     public object Clone() {

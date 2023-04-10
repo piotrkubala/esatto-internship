@@ -156,6 +156,7 @@ class MainClass {
 
                 char id_search_key = Console.ReadKey().KeyChar;
 
+                Console.WriteLine("Enter id: ");
                 String ?input_id = Console.ReadLine();
 
                 if (input_id == null) {
@@ -200,6 +201,7 @@ class MainClass {
 
                 char date_search_key = Console.ReadKey().KeyChar;
 
+                Console.WriteLine("Enter date: ");
                 String ?input_date = Console.ReadLine();
 
                 if (input_date == null) {
