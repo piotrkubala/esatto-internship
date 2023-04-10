@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 class CustomerDatabase {
     /**
     * Dictionary of all customers in the database
@@ -100,7 +102,7 @@ class CustomerDatabase {
                 && (search_query.country is null || customer.address.country == search_query.country)
                 && (search_query.min_house_number is null || customer.address.house_number >= search_query.min_house_number)
                 && (search_query.max_house_number is null || customer.address.house_number <= search_query.max_house_number)
-            select (long) customer.id;
+            select (customer.id is null ? -1 : (long) customer.id); // there should be no null ids in the select return becouse of the where clause
             
         return query_result.ToList();
     }
@@ -122,5 +124,68 @@ class CustomerDatabase {
         }
 
         return customer_ids;
+    }
+
+    public void Clear() {
+        customers_dictionary.Clear();
+        next_customer_id = 0;
+    }
+
+    public void SaveToFile(String path) {
+        // Save database to file
+        StreamWriter ?file = null;
+        try {
+            file = new StreamWriter(path);
+        } catch (Exception) {
+            throw new DatabaseInternalErrorException("Could not open file " + path + " for writing");
+        }
+
+        foreach (var customer in customers_dictionary.Values) {
+            file.WriteLine(JsonSerializer.Serialize(customer));
+        }
+
+        file.Close();
+    }
+
+    /**
+    * Load database from file
+    * @param path The path to the file to load the database from
+    */
+    public void LoadFromFile(String path) {
+        StreamReader ?file = null;
+        try {
+            file = new StreamReader(path);
+        } catch (Exception) {
+            throw new DatabaseInternalErrorException("Could not open file " + path + " for reading");
+        }
+
+        int line_number = 0;
+        while (!file.EndOfStream) {
+            line_number++;
+
+            String ?line = file.ReadLine();
+
+            if (line is null) {
+                throw new DatabaseInternalErrorException("Could not read line from file " + path);
+            }
+
+            try {
+                Customer ?customer = JsonSerializer.Deserialize<Customer>(line);
+                
+                if (customer is null) {
+                    throw new DatabaseInternalErrorException($"Could not deserialize customer from line ({line_number}) " + line);
+                }
+
+                if (customer.id is null || !customers_dictionary.ContainsKey((long) customer.id)) {
+                    AddCustomer(customer);
+                } else {
+                    EditCustomer(customer);
+                }
+            } catch (Exception) {
+                throw new DatabaseInternalErrorException($"Could not deserialize customer from line ({line_number}) " + line);
+            }            
+        }
+
+        file.Close();
     }
 }

@@ -314,6 +314,35 @@ class MainClass {
         }
     }
 
+    private static void SaveDatabaseToFile(CustomerDatabase database) {
+        Console.WriteLine("Enter file name: ");
+        String ?file_name = Console.ReadLine();
+
+        if (file_name == null) {
+            throw new InputException("File name cannot be empty");
+        }
+
+        database.SaveToFile(file_name);
+    }
+
+    private static void LoadDatabaseFromFile(CustomerDatabase database) {
+        Console.WriteLine("Enter file name: ");
+        String ?file_name = Console.ReadLine();
+
+        if (file_name == null) {
+            throw new InputException("File name cannot be empty");
+        }
+
+        Console.WriteLine("Would you like to clear the database before loading? [y/n]");
+        char clear_database = Console.ReadKey().KeyChar;
+
+        if (clear_database == 'y') {
+            database.Clear();
+        }
+
+        database.LoadFromFile(file_name);
+    }
+
     public static void Main(String[] args) {
         CustomerDatabase database = new CustomerDatabase();
 
@@ -328,6 +357,7 @@ class MainClass {
             Console.WriteLine("[l] List all customers");
             Console.WriteLine("[v] Save database to file");
             Console.WriteLine("[r] Load database from file");
+            Console.WriteLine("[c] Clear database");
             Console.WriteLine("[q] Quit");
 
             input_key = Console.ReadKey().KeyChar;
@@ -350,8 +380,13 @@ class MainClass {
                     ListAllCustomers(database);
                     break;
                 case 'v':
+                    SaveDatabaseToFile(database);
                     break;
                 case 'r':
+                    LoadDatabaseFromFile(database);
+                    break;
+                case 'c':
+                    database.Clear();
                     break;
                 case 'q':
                     break;
