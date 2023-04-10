@@ -84,25 +84,25 @@ class CustomerDatabase {
     * @param search_query The search query object to search the database with
     * @return List of all customers ids in the database given a search query object
     */
-    public List<int> GetCustomerIds(SearchCustomersQuery search_query) {
+    public List<long> GetCustomerIds(SearchCustomersQuery search_query) {
         // Get list of all customers ids in the database given a search query object
-        List<int> customer_ids = new List<int>();
-
         var query_result = 
             from customer in customers_dictionary.Values
-                where (search_query.min_id is null || customer.id >= search_query.min_id)
+                where customer.id is not null
+                && (search_query.min_id is null || customer.id >= search_query.min_id)
                 && (search_query.max_id is null || customer.id <= search_query.max_id)
                 && (search_query.name is null || customer.name == search_query.name)
                 && (search_query.vat_id is null || customer.vat_id == search_query.vat_id)
                 && (search_query.min_creation_date is null || customer.creation_date >= search_query.min_creation_date)
                 && (search_query.max_creation_date is null || customer.creation_date <= search_query.max_creation_date)
+                && (search_query.street is null || customer.address.street == search_query.street)
                 && (search_query.city is null || customer.address.city == search_query.city)
                 && (search_query.country is null || customer.address.country == search_query.country)
                 && (search_query.min_house_number is null || customer.address.house_number >= search_query.min_house_number)
                 && (search_query.max_house_number is null || customer.address.house_number <= search_query.max_house_number)
-            select customer.id;
+            select (long) customer.id;
             
-        return customer_ids;
+        return query_result.ToList();
     }
 
     /**
