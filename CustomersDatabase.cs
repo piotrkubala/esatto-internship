@@ -90,16 +90,37 @@ class CustomerDatabase {
 
         var query_result = 
             from customer in customers_dictionary.Values
-                where search_query.name is null || customer.name == search_query.name
-                where search_query.vat_id is null || customer.vat_id == search_query.vat_id
-                where search_query.min_creation_date is null || customer.creation_date >= search_query.min_creation_date
-                where search_query.max_creation_date is null || customer.creation_date <= search_query.max_creation_date
-                where search_query.city is null || customer.address.city == search_query.city
-                where search_query.country is null || customer.address.country == search_query.country
-                where search_query.min_house_number is null || customer.address.house_number >= search_query.min_house_number
-                where search_query.max_house_number is null || customer.address.house_number <= search_query.max_house_number
+                where (search_query.min_id is null || customer.id >= search_query.min_id)
+                && (search_query.max_id is null || customer.id <= search_query.max_id)
+                && (search_query.name is null || customer.name == search_query.name)
+                && (search_query.vat_id is null || customer.vat_id == search_query.vat_id)
+                && (search_query.min_creation_date is null || customer.creation_date >= search_query.min_creation_date)
+                && (search_query.max_creation_date is null || customer.creation_date <= search_query.max_creation_date)
+                && (search_query.city is null || customer.address.city == search_query.city)
+                && (search_query.country is null || customer.address.country == search_query.country)
+                && (search_query.min_house_number is null || customer.address.house_number >= search_query.min_house_number)
+                && (search_query.max_house_number is null || customer.address.house_number <= search_query.max_house_number)
             select customer.id;
             
+        return customer_ids;
+    }
+
+    /**
+    * Get list of all customers ids in the database
+    * @return List of all customers ids in the database
+    */
+    public List<long> GetAllCustomerIds() {
+        // Get list of all customers ids in the database
+        List<long> customer_ids = new List<long>();
+
+        foreach (var customer in customers_dictionary.Values) {
+            if (customer.id is null) {
+                throw new DatabaseInternalErrorException("Customer id is null");
+            }
+
+            customer_ids.Add((long) customer.id);
+        }
+
         return customer_ids;
     }
 }

@@ -1,4 +1,4 @@
-class BadIdException : Exception
+class BadIdException : CustomerDatabaseException
 {
     public BadIdException(string message) : base(message) {
     }

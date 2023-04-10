@@ -4,9 +4,9 @@ class Customer: ICloneable {
     public String ?name;
     public String ?vat_id;
     public DateTime ?creation_date;
-    public CustomerAddress ?address;
+    public CustomerAddress address;
 
-    public Customer(String ?name, String ?vat_id, DateTime ?creation_date, CustomerAddress ?address) {
+    public Customer(String ?name, String ?vat_id, DateTime ?creation_date, CustomerAddress address) {
         this.name = name;
         this.vat_id = vat_id;
         this.creation_date = creation_date;
@@ -31,25 +31,25 @@ class Customer: ICloneable {
         if (new_customer_data.creation_date != null) {
             this.creation_date = new_customer_data.creation_date;
         }
-        if (new_customer_data.address != null) {
-            CustomerAddress new_address = (CustomerAddress) new_customer_data.address;
 
-            if (this.address == null) {
-                this.address = new_address;
-            } else {
-                if (new_address.city != null) {
-                    this.address.city = new_address.city;
-                }
-                if (new_address.country != null) {
-                    this.address.country = new_address.country;
-                }
-                if (new_address.house_number != null) {
-                    this.address.house_number = new_address.house_number;
-                }
-                if (new_address.street != null) {
-                    this.address.street = new_address.street;
-                }
-            }
+        CustomerAddress new_address = (CustomerAddress) new_customer_data.address;
+
+        if (new_address.city != null) {
+            this.address.city = new_address.city;
         }
+        if (new_address.country != null) {
+            this.address.country = new_address.country;
+        }
+        if (new_address.house_number != null) {
+            this.address.house_number = new_address.house_number;
+        }
+        if (new_address.street != null) {
+            this.address.street = new_address.street;
+        }
+    
+    }
+
+    public override String ToString() {
+        return $"Customer({id}, {name}, {vat_id}, {creation_date}, Address({address.city}, {address.country}, {address.house_number}, {address.street}))";
     }
 }
